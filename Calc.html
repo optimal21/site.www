@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор и перевод чисел</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+        .output {
+            margin: 20px 0;
+            padding: 10px;
+            background: #e0e0e0;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Калькулятор и перевод систем</h1>
+        <h2>Перевод чисел</h2>
+        <label>Введите число:</label>
+        <input id="inputNumber" type="text" placeholder="Введите число">
+        <label>Выберите системы:</label>
+        <select id="fromBase">
+            <option value="2">Из 2-ой</option>
+            <option value="10">Из 10-ой</option>
+            <option value="16">Из 16-ой</option>
+        </select>
+        <select id="toBase">
+            <option value="2">В 2-ую</option>
+            <option value="10">В 10-ую</option>
+            <option value="16">В 16-ую</option>
+        </select>
+        <button onclick="convertNumber()">Перевести</button>
+        <div id="conversionOutput" class="output"></div>
+
+        <h2>Калькулятор</h2>
+        <label>Введите выражение:</label>
+        <input id="calcInput" type="text" placeholder="Например, 5 + 3 * 2">
+        <button onclick="calculate()">Посчитать</button>
+        <div id="calcOutput" class="output"></div>
+
+        <h2>Решение в столбик (сложение)</h2>
+        <label>Первое число:</label>
+        <input id="num1" type="text" placeholder="Введите первое число">
+        <label>Второе число:</label>
+        <input id="num2" type="text" placeholder="Введите второе число">
+        <button onclick="solveColumn()">Решить в столбик</button>
+        <div id="columnOutput" class="output"></div>
+    </div>
+
+    <script>
+        // Перевод чисел между системами
+        function convertNumber() {
+            const input = document.getElementById('inputNumber').value;
+            const fromBase = parseInt(document.getElementById('fromBase').value);
+            const toBase = parseInt(document.getElementById('toBase').value);
+
+            try {
+                const converted = parseInt(input, fromBase).toString(toBase).toUpperCase();
+                document.getElementById('conversionOutput').innerText = `Результат: ${converted}`;
+            } catch (e) {
+                document.getElementById('conversionOutput').innerText = "Ошибка ввода!";
+            }
+        }
+
+        // Калькулятор
+        function calculate() {
+            const input = document.getElementById('calcInput').value;
+            try {
+                const result = eval(input); // Используется eval для вычислений
+                document.getElementById('calcOutput').innerText = `Результат: ${result}`;
+            } catch (e) {
+                document.getElementById('calcOutput').innerText = "Ошибка в выражении!";
+            }
+        }
+
+        // Решение в столбик (сложение)
+        function solveColumn() {
+            const num1 = document.getElementById('num1').value;
+            const num2 = document.getElementById('num2').value;
+
+            // Преобразуем числа в массивы для построчной обработки
+            const arr1 = num1.split('').reverse();
+            const arr2 = num2.split('').reverse();
+            const maxLength = Math.max(arr1.length, arr2.length);
+
+            let carry = 0;
+            let result = [];
+
+            for (let i = 0; i < maxLength; i++) {
+                const digit1 = parseInt(arr1[i] || 0);
+                const digit2 = parseInt(arr2[i] || 0);
+                const sum = digit1 + digit2 + carry;
+
+                result.push(sum % 10);
+                carry = Math.floor(sum / 10);
+            }
+
+            if (carry > 0) result.push(carry);
+            result.reverse();
+
+            document.getElementById('columnOutput').innerText = `Результат: ${result.join('')}`;
+        }
+    </script>
+</body>
+</html>
